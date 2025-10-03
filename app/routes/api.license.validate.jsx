@@ -1,5 +1,6 @@
 import { json } from "@remix-run/node";
 import prisma from "../db.server";
+import { validatePulseLicenseKey, isPulseLicenseKey } from "../utils/pulseLicense";
 
 export async function loader({ request }) {
   const url = new URL(request.url);
@@ -17,6 +18,17 @@ export async function loader({ request }) {
   }
 
   try {
+    // First validate the license key format and signature
+    if (isPulseLicenseKey(licenseKey)) {
+      const pulseValidation = validatePulseLicenseKey(licenseKey);
+      if (!pulseValidation.isValid) {
+        return json({
+          success: false,
+          error: pulseValidation.error || "Invalid PULSE license key"
+        });
+      }
+    }
+
     // Check if license exists and is valid
     const license = await prisma.license.findUnique({
       where: { licenseKey }

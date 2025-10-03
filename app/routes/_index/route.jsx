@@ -1,6 +1,5 @@
 import { redirect } from "@remix-run/node";
 import { Form, useLoaderData } from "@remix-run/react";
-import { login } from "../../shopify.server";
 import styles from "./styles.module.css";
 
 export const loader = async ({ request }) => {
@@ -9,6 +8,9 @@ export const loader = async ({ request }) => {
   if (url.searchParams.get("shop")) {
     throw redirect(`/app?${url.searchParams.toString()}`);
   }
+  // Dynamically import server-only code inside the loader to prevent Vite
+  // from including server modules in the client bundle.
+  const { login } = await import("../../shopify.server");
 
   return { showForm: Boolean(login) };
 };

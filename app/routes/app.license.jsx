@@ -15,24 +15,25 @@ import {
   Divider,
   Badge
 } from "@shopify/polaris";
-import { authenticate } from "../shopify.server";
-import prisma from "../db.server";
+// server-only imports are loaded dynamically inside loader/action
 
 export async function loader({ request }) {
   // Remove authentication requirement to allow direct access
   // await authenticate.admin(request);
 
   
-  // Get all licenses and activations
+  // Get all licenses and activations (server-only database access)
+  const { default: prisma } = await import("../db.server");
+
   const licenses = await prisma.license.findMany({
     orderBy: { createdAt: 'desc' },
-    take: 50
+    take: 50,
   });
 
   const activations = await prisma.licenseActivation.findMany({
     where: { isActive: true },
     orderBy: { activatedAt: 'desc' },
-    take: 50
+    take: 50,
   });
 
   return json({ licenses, activations });
@@ -40,6 +41,7 @@ export async function loader({ request }) {
 
 export async function action({ request }) {
   // Remove authentication requirement to allow direct access
+  // const { authenticate } = await import("../shopify.server");
   // const { admin } = await authenticate.admin(request);
   
   return null; // Actions handled by separate API routes

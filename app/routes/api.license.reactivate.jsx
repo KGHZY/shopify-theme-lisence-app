@@ -1,6 +1,6 @@
 import { json } from "@remix-run/node";
 import prisma from "../db.server";
-import { authenticate } from "../shopify.server";
+// import { authenticate } from "../shopify.server";
 
 export async function action({ request }) {
   if (request.method !== "POST") {
@@ -8,7 +8,8 @@ export async function action({ request }) {
   }
 
   try {
-    await authenticate.admin(request);
+    // Remove authentication requirement to allow direct access
+    // await authenticate.admin(request);
     const formData = await request.formData();
     const licenseKey = formData.get("licenseKey");
     const domain = formData.get("domain");

@@ -1,6 +1,6 @@
 import { json } from "@remix-run/node";
 import prisma from "../db.server";
-import { authenticate } from "../shopify.server";
+// import { authenticate } from "../shopify.server";
 
 export async function action({ request }) {
   if (request.method !== "POST") {
@@ -8,7 +8,8 @@ export async function action({ request }) {
   }
 
   try {
-    const { admin } = await authenticate.admin(request);
+    // Remove authentication requirement to allow direct access
+    // const { admin } = await authenticate.admin(request);
     const formData = await request.formData();
     const licenseKey = formData.get("licenseKey");
     const domain = formData.get("domain");
@@ -91,6 +92,10 @@ export async function action({ request }) {
     });
 
     // Store activation in theme metafields
+    // NOTE: Metafield creation requires Shopify admin authentication
+    // This functionality is disabled when authentication is removed
+    // If you need metafield storage, you'll need to implement a different approach
+    /*
     try {
       const shopDomain = domain.replace('.myshopify.com', '');
       
@@ -129,6 +134,7 @@ export async function action({ request }) {
       console.error("Metafield creation error:", metafieldError);
       // Don't fail the activation if metafield creation fails
     }
+    */
 
     return json({
       success: true,

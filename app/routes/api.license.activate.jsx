@@ -1,6 +1,5 @@
 import { json } from "@remix-run/node";
 import prisma from "../db.server";
-import { validatePulseLicenseKey, isPulseLicenseKey } from "../utils/pulseLicense";
 // import { authenticate } from "../shopify.server";
 
 export async function action({ request }) {
@@ -32,17 +31,6 @@ export async function action({ request }) {
         success: false,
         error: "Domain must be a valid .myshopify.com domain"
       });
-    }
-
-    // Validate PULSE license key format and signature if applicable
-    if (isPulseLicenseKey(licenseKey)) {
-      const pulseValidation = validatePulseLicenseKey(licenseKey);
-      if (!pulseValidation.isValid) {
-        return json({
-          success: false,
-          error: pulseValidation.error || "Invalid PULSE license key"
-        });
-      }
     }
 
     // Check if license exists

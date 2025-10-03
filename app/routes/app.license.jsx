@@ -22,6 +22,7 @@ export async function loader({ request }) {
   // Remove authentication requirement to allow direct access
   // await authenticate.admin(request);
 
+  
   // Get all licenses and activations
   const licenses = await prisma.license.findMany({
     orderBy: { createdAt: 'desc' },

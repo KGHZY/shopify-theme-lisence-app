@@ -19,7 +19,8 @@ import { authenticate } from "../shopify.server";
 import prisma from "../db.server";
 
 export async function loader({ request }) {
-  await authenticate.admin(request);
+  // Remove authentication requirement to allow direct access
+  // await authenticate.admin(request);
 
   // Get all licenses and activations
   const licenses = await prisma.license.findMany({
@@ -37,7 +38,8 @@ export async function loader({ request }) {
 }
 
 export async function action({ request }) {
-  const { admin } = await authenticate.admin(request);
+  // Remove authentication requirement to allow direct access
+  // const { admin } = await authenticate.admin(request);
   
   return null; // Actions handled by separate API routes
 }
